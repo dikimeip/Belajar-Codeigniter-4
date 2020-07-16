@@ -119,6 +119,70 @@ class PagesController extends BaseController
 		session()->setFlashdata('pesan','Success Input Data');
 		return redirect()->to('/PagesController/komik') ;
 	}
+
+	public function deleteKomik($id)
+	{
+		$this->MyKomik->delete($id);
+		session()->setFlashdata('pesan','Success Hapus Data');
+		return redirect()->to('/PagesController/komik') ;
+	}
+
+	public function edit($id)
+	{
+		$data = [
+			'judul' => 'Ubah Komik',
+			'validation' => \Config\Services::validation(),
+			'komik' => $this->MyKomik->getKomik($id)
+		];
+
+		return view('pages/editKomik',$data);
+	}
+
+	public function update($id)
+	{
+		if (!$this->validate([
+			'judul' => [
+				'rules' => 'required',
+				'errors' => [
+					'required' => '{field} Wajib Diisi Ya..!'
+				]
+			],
+			'penulis' => [
+				'rules' => 'required',
+				'errors' => [
+					'required' => '{field} Wajib Diisi Ya..!'
+				]
+			],
+			'penerbit' => [
+				'rules' => 'required',
+				'errors' => [
+					'required' => '{field} Wajib Diisi Ya..!'
+				]
+			],
+			'sampul' => [
+				'rules' => 'required',
+				'errors' => [
+					'required' => '{field} Wajib Diisi Ya..!'
+				]
+			],
+		])) {
+			$validation = \Config\Services::validation();
+			return redirect()->to('/PagesController/addKomik')->withInput()->with('validation',$validation);
+		}
+
+		$slug = url_title($this->request->getVar('judul'),'-',true);
+		$this->MyKomik->save([
+			'id' => $id,
+			'judul' => $this->request->getVar('judul'),
+			'slug' => $slug,
+			'penulis' => $this->request->getVar('penulis'),
+			'penerbit' => $this->request->getVar('penerbit'),
+			'sampul' => $this->request->getVar('sampul')
+
+		]);
+		session()->setFlashdata('pesan','Success Input Data');
+		return redirect()->to('/PagesController/komik') ;
+	}
 	//--------------------------------------------------------------------
 
 }

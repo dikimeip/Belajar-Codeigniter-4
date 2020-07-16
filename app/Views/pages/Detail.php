@@ -7,5 +7,11 @@
 	<p><b>PENULIS : </b><?php echo $komik['penulis'] ?></p>
 	<p><b>PENERBIT : </b><?php echo $komik['penerbit'] ?></p>
 	<p><img src="/img/<?php echo $komik['sampul'] ?>"></p>
+	<form action="/komik/<?php echo $komik['id'] ?>" method="post" style="display:  inline;">
+		<?php echo csrf_field() ?>
+		<input type="hidden" name="_method" value="DELETE">
+		<button onclick="return confirm('data akan dihapus.?')" class="btn btn-danger" type="submit">DELETE</button>
+	</form>
+	<a href="/komik/edit/<?php echo $komik['slug'] ?>" class="btn btn-primary">EDIT</a>
 </div>
 <?php echo $this->endSection() ?>
